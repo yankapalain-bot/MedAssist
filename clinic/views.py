@@ -126,7 +126,7 @@ class MedicalHistoryCreateView(LoginRequiredMixin, CreateView):
         return {}
 
     def form_valid(self, form):
-        messages.success(self.request, "Antécédents médicaux enregistrés.")
+        messages.success(self.request, "Patient Medical History saved.")
         return super().form_valid(form)
 
 
@@ -135,7 +135,7 @@ class MedicalHistoryUpdateView(LoginRequiredMixin, UpdateView):
     form_class = MedicalHistoryForm
 
     def form_valid(self, form):
-        messages.success(self.request, "Antécédents médicaux mis à jour.")
+        messages.success(self.request, "Patient Medical History updated.")
         return super().form_valid(form)
 
 
@@ -159,6 +159,10 @@ class AppointementListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableList
 
 
 class AppointmentDetailView(LoginRequiredMixin, DetailView):
+    model = Appointment
+
+
+class AppointmentCreateView(LoginRequiredMixin, DetailView):
     model = Appointment
     form_class = AppointmentForm
 
@@ -185,13 +189,68 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
 # # Patient - PregnancyProfile Views
 # -------------------------------------------------------------------------------------------------
 
+class PregnancyProfileCreateView(LoginRequiredMixin, CreateView):
+    model = PregnancyProfile
+    form_class = PregnancyProfileForm
+
+    def get_initial(self):
+        patient_pk = self.request.GET.get("patient")
+        if patient_pk:
+            return {"patient": patient_pk}
+        return{}
 
 
+class PregnancyProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = PregnancyProfile
+    form_class = PregnancyProfileForm
 
 
+# -------------------------------------------------------------------------------------------------
+# # Clinical - ConsultationNote Views
+# -------------------------------------------------------------------------------------------------
+
+class ConsultationNoteListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
+
+    model = ConsultationNote
+    paginate_by = 15
+    partial_template_name = "clinic/includes/consultationnote_rows.html"
+    search_fields = ("patient__first_name", "patient__last_name", "reason_for_visit", "assessment")
+
+    def get_queryset(self):
+        return (
+            super().get_queryset()
+            .select_related("patient", "clinician", "template")
+            .order_by("-consultation_date")
+        )
 
 
+class ConsultationNoteDetailView(LoginRequiredMixin, DetailView):
+    model = ConsultationNote
 
+
+class ConsultationNoteCreateView(LoginRequiredMixin, CreateView):
+    model = ConsultationNote
+    form_class = ConsultationNoteForm
+
+    def get_initial(self):
+        patient_pk = self.request.GET.get("patient")
+        if patient_pk:
+            return {"patient": patient_pk, "clinician": self.request.user.pk}
+        return {"clinician": self.request.user.pk}
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Consultation notes saved.")
+        return super().form_valid(form)
+
+
+class ConsultationNoteUpdateView(LoginRequiredMixin, UpdateView):
+    model = ConsultationNote
+    form_class = ConsultationNoteForm
+
+
+class ConsultationNoteDeleteView(LoginRequiredMixin, DeleteView):
+    model = ConsultationNote
+    success_url = reverse_lazy("clinic:consultationnote_list")
 
 
 
@@ -200,6 +259,6 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
 
 
     
-    ConsultationNote,
+    
     ClinicalNoteTemplate,
     FollowUpReminder,
