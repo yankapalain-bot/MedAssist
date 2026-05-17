@@ -137,3 +137,69 @@ class MedicalHistoryUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Antécédents médicaux mis à jour.")
         return super().form_valid(form)
+
+
+
+# -------------------------------------------------------------------------------------------------
+# # Patient - Appointment Views
+# -------------------------------------------------------------------------------------------------
+
+class AppointementListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
+    model = Appointment
+    paginate_by = 15
+    partial_template_name = "clinic/includes/appointment_rows.html"
+    search_fields = ("patient__first_name", "patient__last_name", "purpose", "location")
+
+    def get_queryset(self):
+        return(
+            super().get_queryset()
+            .select_related("patient", "clinician")
+            .order_by("start_at")
+        )
+
+
+class AppointmentDetailView(LoginRequiredMixin, DetailView):
+    model = Appointment
+    form_class = AppointmentForm
+
+    def get_initial(self):
+        return {"clinician": self.request.user.pk}
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Appointment schedules.")
+        return super().form_valide(form)
+
+
+class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    form_class = AppointmentForm
+
+
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
+    success_url = reverse_lazy("clinic:Appointment_list")
+
+
+
+# -------------------------------------------------------------------------------------------------
+# # Patient - PregnancyProfile Views
+# -------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    ConsultationNote,
+    ClinicalNoteTemplate,
+    FollowUpReminder,
