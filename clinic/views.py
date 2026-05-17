@@ -295,6 +295,67 @@ class FollowUpReminderDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("clinic:followupreminder_list")
 
     
+
+# ---------------------------------------------------------------------------------------------------------------------
+#  User Management Views
+# ---------------------------------------------------------------------------------------------------------------------
     
-    
-    
+class UserListView(StaffRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
+    model = User
+    paginate_by = 15
+    partial_template_name = "clinic/includes/user_rows.html"
+    search_fields = ("username", "first_name", "last_name", "email")
+    template_name = "clinic/user_list.html"
+
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("username")
+
+
+class UserDetailView(LoginRequiredMixin, DetailView): 
+    model = User
+    template_name = "clinic/user_detail.html"
+    context_object_name = "profile_user"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context["staff_profile"] = self.object.staff_profile
+        except StaffProfile.DoesNotExist:
+            context["staff_profile"] = None
+        return context
+
+
+class UserCreateView(StaffRequiredMixin, CreateView):
+    model = User
+    form_class = StaffUserCreationForm
+    template_name = "clinic/user_form.html"
+    success_url = reverse_lazy("clinic:user_list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Save groups after the user is created (M2M requires a saved object)
+        self.object.groups.set(form.cleaned_data["groups"])
+        # Create an empty StaffProfile for the new user
+        StaffProfile.objects.get_or_create(user=self.object)
+        messages.success(self.request, f"User {self.object.username} created.")
+        return response
+
+
+class UserUpdateView(StaffRequiredMixin, UpdateView):
+    model = User
+    form_class = StaffUserUpdateForm
+    template_name = "clinic/user_form.html"
+    success_url = reverse_lazy("clinic:user_list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.object.groups.set(form.cleaned_data["groups"])
+        messages.success(self.request, f"User {self.object.username} updated.")
+        return response
+
+
+class UserDeleteView(StaffRequiredMixin, DeleteView):
+    model = User
+    template_name = "clinic/user_confirm_delete.html"
+    success_url = reverse_lazy("clinic:user_list")
