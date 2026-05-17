@@ -46,6 +46,11 @@ from .models import (
 # Create your views here.
 
 # ----------------------------------------------------------------------------
+# Auth Views
+# ----------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------
 # Patient Views
 # ----------------------------------------------------------------------------
 
@@ -105,3 +110,30 @@ class PatientDeleteView(LoginRequiredMixin, DeleteView):
     model = Patient
     success_url = reverse_lazy("clinic:patient_list")
 
+
+# ----------------------------------------------------------------------------
+# # Patient - MedicalHistory Views
+# ----------------------------------------------------------------------------
+
+class MedicalHistoryCreateView(LoginRequiredMixin, CreateView):
+    model = MedicalHistory
+    form_class = MedicalHistoryForm
+
+    def get_initial(self):
+        patient_pk = self.request.GET.get("patient")
+        if patient_pk:
+            return {"patient": patient_pk}
+        return {}
+
+    def form_valid(self, form):
+        messages.success(self.request, "Antécédents médicaux enregistrés.")
+        return super().form_valid(form)
+
+
+class MedicalHistoryUpdateView(LoginRequiredMixin, UpdateView):
+    model = MedicalHistory
+    form_class = MedicalHistoryForm
+
+    def form_valid(self, form):
+        messages.success(self.request, "Antécédents médicaux mis à jour.")
+        return super().form_valid(form)
