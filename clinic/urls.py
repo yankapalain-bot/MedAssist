@@ -52,7 +52,15 @@ urlpatterns = [
     path("notes/<int:pk>/edit",     views.ConsultationNoteUpdateView.as_view(), name = "consultationnote_update"),
     path("notes/<int:pk>/delete",   views.ConsultationNoteDeleteView.as_view(), name="consultationnote_delete"),
    
+    # ---------------------------------------------------------------------------------------------------------------------
+    # # Follow-up reminder Views
+    # ---------------------------------------------------------------------------------------------------------------------
 
+    path("reminders/",                  views.FollowUpReminderListView.as_view(),   name="followupreminder_list"),
+    path("reminders/new/",              views.FollowUpReminderCreateView.as_view(), name="followupreminder_create"),
+    path("reminders/<int:pk>/",         views.FollowUpReminderDetailView.as_view(), name="followupreminder_detail"),
+    path("reminders/<int:pk>/edit",     views.FollowUpReminderUpdateView.as_view(), name="followupreminder_update"),
+    path("reminders/<int:pk>/delete",   views.FollowUpReminderDeleteView.as_view(), name="followupreminder_delete"),
 
 
 

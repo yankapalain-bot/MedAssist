@@ -205,9 +205,9 @@ class PregnancyProfileUpdateView(LoginRequiredMixin, UpdateView):
     form_class = PregnancyProfileForm
 
 
-# -------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------
 # # Clinical - ConsultationNote Views
-# -------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------
 
 class ConsultationNoteListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
 
@@ -254,11 +254,47 @@ class ConsultationNoteDeleteView(LoginRequiredMixin, DeleteView):
 
 
 
+# ---------------------------------------------------------------------------------------------------------
+# # Follow-up reminder Views
+# ---------------------------------------------------------------------------------------------------------
+
+class FollowUpReminderListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
+    model = FollowUpReminder
+    paginate_by = 15
+    partial_template_name = "clinic/includes/followupreminder_rows.html"
+    search_fields = ("patient__first_name", "patient__last_name", "title", "status")
+
+    def get_queryset(self):
+        return (
+            super().get_queryset()
+            .select_related("patient", "appointment")
+            .order_by("due_date")
+        )
 
 
+class FollowUpReminderDetailView(LoginRequiredMixin, DeleteView):
+    model = FollowUpReminder
+    
 
+class FollowUpReminderCreateView(LoginRequiredMixin, CreateView):
+    model = FollowUpReminder
+    form_class = FollowUpReminderForm
+
+    def form_valid(self, form):
+        messages.success(self.request, "Follow-up reminder created.")
+        return super().form_valide(form)
+
+
+class FollowUpReminderUpdateView(LoginRequiredMixin, UpdateView):
+    model = FollowUpReminder
+    form_class = FollowUpReminderForm
+
+
+class FollowUpReminderDeleteView(LoginRequiredMixin, DeleteView):
+    model = FollowUpReminder
+    success_url = reverse_lazy("clinic:followupreminder_list")
 
     
     
-    ClinicalNoteTemplate,
-    FollowUpReminder,
+    
+    
