@@ -28,8 +28,11 @@ class PatientAdmin(admin.ModelAdmin):
 
 @admin.register(MedicalHistory)
 class MedicalHistoryAdmin(admin.ModelAdmin):
-    list_display = ("patient", "medications", "chronic_conditions", "allergies", "past_surgeries")
-    list_filter = ("patient", "allergies")
+    list_display = ("patient", "blood_group", "hypertension", "diabetes",
+                    "sickle_cell_disease", "hiv_positive")
+    list_filter  = ("blood_group", "hypertension", "diabetes",
+                    "sickle_cell_disease", "hiv_positive")
+    search_fields = ("patient__first_name", "patient__last_name")
 
 
 @admin.register(Appointment)

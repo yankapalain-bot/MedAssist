@@ -20,17 +20,17 @@
   {% if user.is_authenticated %}
   <div class="navbar bg-primary text-primary-content shadow-lg px-4">
     <div class="navbar-start">
-      <a href="{% url 'clinic:dashboard' %}" class="btn btn-ghost text-xl font-bold">
+      <a href="" class="btn btn-ghost text-xl font-bold">
         🏥 MedAssist
       </a>
     </div>
 
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1 gap-1">
-        <li><a href="{% url 'clinic:patient_list' %}" class="rounded-lg">Patients</a></li>
-        <li><a href="{% url 'clinic:consultationnote_list' %}" class="rounded-lg">Notes</a></li>
-        <li><a href="{% url 'clinic:appointment_list' %}" class="rounded-lg">Appointments</a></li>
-        <li><a href="{% url 'clinic:followupreminder_list' %}" class="rounded-lg">Reminders</a></li>
+        <li><a href="#" class="rounded-lg">Patients</a></li>
+        <li><a href="#" class="rounded-lg">Notes</a></li>
+        <li><a href="#" class="rounded-lg">Appointments</a></li>
+        <li><a href="#" class="rounded-lg">Reminders</a></li>
         {% if user.is_staff %}
         <li><a href="{% url 'clinic:user_list' %}" class="rounded-lg">Users</a></li>
         {% endif %}

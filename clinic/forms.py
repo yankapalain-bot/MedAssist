@@ -44,7 +44,7 @@ class DaisyFormMixin:
 
 # Patient forms
 
-class PatientForm(DaisyFormMixin, forms.ModelChoiceIterator):
+class PatientForm(DaisyFormMixin, forms.ModelForm):
     class Meta:
         model = Patient
         fields = [
@@ -61,22 +61,25 @@ class PatientForm(DaisyFormMixin, forms.ModelChoiceIterator):
 # MedicalHistory forms
 
 class MedicalHistoryForm(DaisyFormMixin, forms.ModelForm):
- class Meta:
-     model = MedicalHistory
-     fields = [
-         "blood_group", "hypertension", "diabetes", "sickle_cell_disease", "hiv_positive", "tuberculosis", "hepatitis_b",
-         "epilepsy", "asthma", "other_chronic", "previous_surgeries", "allergies", "current_medications", "family_history",
-         "smoking", "alcohol", "additional_notes",
-     ]
-
-     widgets = {
-         "other_chronic":       forms.Textarea(attrs={"rows": 3}),
-         "previous_surgeries":  forms.Textarea(attrs={"rows": 3}),
-         "allergies":           forms.Textarea(attrs={"rows": 3}),
-         "current_medications": forms.Textarea(attrs={"rows": 3}),
-         "family_history":      forms.Textarea(attrs={"rows": 3}),
-         "additional_notes":    forms.Textarea(attrs={"rows": 3}),
-     }
+    class Meta:
+        model = MedicalHistory
+        fields = [
+            "blood_group",
+            "hypertension", "diabetes", "sickle_cell_disease",
+            "hiv_positive", "tuberculosis", "hepatitis_b",
+            "epilepsy", "asthma", "other_chronic",
+            "previous_surgeries", "allergies",
+            "current_medications", "family_history",
+            "smoking", "alcohol", "additional_notes",
+        ]
+        widgets = {
+            "other_chronic":       forms.Textarea(attrs={"rows": 3}),
+            "previous_surgeries":  forms.Textarea(attrs={"rows": 3}),
+            "allergies":           forms.Textarea(attrs={"rows": 2}),
+            "current_medications": forms.Textarea(attrs={"rows": 3}),
+            "family_history":      forms.Textarea(attrs={"rows": 3}),
+            "additional_notes":    forms.Textarea(attrs={"rows": 3}),
+        }
 
 
 # PregnancyProfile forms

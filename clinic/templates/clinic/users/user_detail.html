@@ -1,0 +1,43 @@
+{% extends "clinic/base.html" %}
+{% block title %}{{ profile_user.get_full_name|default:profile_user.username }} — MedAssist{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex items-center gap-4">
+  {% if user.is_staff %}<a href="{% url 'clinic:user_list' %}" class="btn btn-ghost btn-sm">← Back</a>{% endif %}
+  <h1 class="text-xl font-bold">{{ profile_user.get_full_name|default:profile_user.username }}</h1>
+  {% if user.is_staff or user == profile_user %}
+  <div class="ml-auto flex gap-2">
+    <a href="{% url 'clinic:user_update' profile_user.pk %}" class="btn btn-sm btn-outline">Edit</a>
+    {% if user.is_staff and not profile_user.is_superuser %}
+    <a href="{% url 'clinic:user_delete' profile_user.pk %}" class="btn btn-sm btn-error btn-outline">Delete</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h2 class="card-title text-base">Account Info</h2>
+      <dl class="space-y-2 text-sm">
+        <div><dt class="font-medium opacity-60">Username</dt><dd>{{ profile_user.username }}</dd></div>
+        <div><dt class="font-medium opacity-60">Email</dt><dd>{{ profile_user.email|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">Staff</dt><dd>{% if profile_user.is_staff %}Yes{% else %}No{% endif %}</dd></div>
+        <div><dt class="font-medium opacity-60">Active</dt><dd>{% if profile_user.is_active %}Yes{% else %}No{% endif %}</dd></div>
+        <div><dt class="font-medium opacity-60">Joined</dt><dd>{{ profile_user.date_joined|date:"d M Y" }}</dd></div>
+      </dl>
+    </div>
+  </div>
+  {% if staff_profile %}
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h2 class="card-title text-base">Profile</h2>
+      <dl class="space-y-2 text-sm">
+        <div><dt class="font-medium opacity-60">Role</dt><dd><span class="badge badge-outline">{{ staff_profile.get_role_label_display }}</span></dd></div>
+        <div><dt class="font-medium opacity-60">Phone</dt><dd>{{ staff_profile.phone|default:"—" }}</dd></div>
+        {% if staff_profile.bio %}<div><dt class="font-medium opacity-60">Bio</dt><dd class="whitespace-pre-line">{{ staff_profile.bio }}</dd></div>{% endif %}
+      </dl>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -305,7 +305,7 @@ class UserListView(StaffRequiredMixin, HtmxTemplateMixin, SearchableListMixin, L
     paginate_by = 15
     partial_template_name = "clinic/includes/user_rows.html"
     search_fields = ("username", "first_name", "last_name", "email")
-    template_name = "clinic/user_list.html"
+    template_name = "clinic/users/user_list.html"
 
 
     def get_queryset(self):
@@ -314,7 +314,7 @@ class UserListView(StaffRequiredMixin, HtmxTemplateMixin, SearchableListMixin, L
 
 class UserDetailView(LoginRequiredMixin, DetailView): 
     model = User
-    template_name = "clinic/user_detail.html"
+    template_name = "clinic/users/user_detail.html"
     context_object_name = "profile_user"
 
     def get_context_data(self, **kwargs):
@@ -329,7 +329,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 class UserCreateView(StaffRequiredMixin, CreateView):
     model = User
     form_class = StaffUserCreationForm
-    template_name = "clinic/user_form.html"
+    template_name = "clinic/users/user_form.html"
     success_url = reverse_lazy("clinic:user_list")
 
     def form_valid(self, form):
@@ -345,7 +345,7 @@ class UserCreateView(StaffRequiredMixin, CreateView):
 class UserUpdateView(StaffRequiredMixin, UpdateView):
     model = User
     form_class = StaffUserUpdateForm
-    template_name = "clinic/user_form.html"
+    template_name = "clinic/users/user_form.html"
     success_url = reverse_lazy("clinic:user_list")
 
     def form_valid(self, form):
@@ -357,5 +357,5 @@ class UserUpdateView(StaffRequiredMixin, UpdateView):
 
 class UserDeleteView(StaffRequiredMixin, DeleteView):
     model = User
-    template_name = "clinic/user_confirm_delete.html"
+    template_name = "clinic/users/user_confirm_delete.html"
     success_url = reverse_lazy("clinic:user_list")

@@ -1,3 +1,5 @@
+#Login: dr.ngono / medassist2025
+
 import random
 from datetime import timedelta
 
@@ -19,7 +21,7 @@ from clinic.models import (
 
 fake = Faker()
 
-# ── Patients (Womens) ────────────────────────────────────────────────
+# ── Patients ────────────────────────────────────────────────
 
 FEMALE_FIRST_NAMES = [
     "Amina", "Fatima", "Nadia", "Viviane", "Sylvie", "Christelle",
@@ -130,6 +132,30 @@ NOTE_TEMPLATES_DATA = [
     },
 ]
 
+BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "unknown"]
+SURGERIES = [
+    "Cesarean 2019",
+    "Appendectomy 2017",
+    "Myomectomy 2020",
+    "Exploratory laparoscopy 2018",
+    "Curettage 2021",
+]
+MEDICATIONS = [
+    "Iron 200 mg — 1 cp/jour",
+    "Folic acid 5 mg — 1 cp/jour",
+    "Methyldopa 250 mg — 2x/jour",
+    "Metformin 500 mg — 2x/jour",
+    "Hydroxyurea 500 mg — 1 cp/jour",
+    "Cotrimoxazole 480 mg — 1 cp/jour",
+]
+ALLERGIES = [
+    "Penicillin",
+    "Aspirin",
+    "Sulfonamides",
+    "Latex",
+    "Peanuts",
+]
+
 
 class Command(BaseCommand):
     help = "Seed the database with realistic gynecology clinic demo data."
@@ -230,13 +256,48 @@ class Command(BaseCommand):
 
         # ── Medical history (for all patients) ────────────────────
         for patient in patients:
-            MedicalHistory.objects.create(
-               patient=patient,
-               allergies=fake.sentence(),
-               chronic_conditions=fake.sentence(),
-               medications=fake.sentence(),
-               past_surgeries=fake.sentence(),
-            )
+             if random.random() > 0.20:
+                has_htn  = random.random() < 0.20
+                has_dm   = random.random() < 0.15
+                has_scd  = random.random() < 0.12
+                has_hiv  = random.random() < 0.08
+                has_hepb = random.random() < 0.10
+                has_tb   = random.random() < 0.05
+                has_epi  = random.random() < 0.04
+                has_asth = random.random() < 0.06
+
+                MedicalHistory.objects.get_or_create(
+                    patient=patient,
+                    defaults={
+                        "blood_group": random.choice(BLOOD_GROUPS),
+                        "hypertension":        has_htn,
+                        "diabetes":            has_dm,
+                        "sickle_cell_disease": has_scd,
+                        "hiv_positive":        has_hiv,
+                        "hepatitis_b":         has_hepb,
+                        "tuberculosis":        has_tb,
+                        "epilepsy":            has_epi,
+                        "asthma":              has_asth,
+                        "other_chronic": random.choice([
+                            "", "", "Chronic kidney disease", "Known heart disease"
+                        ]),
+                        "previous_surgeries": random.choice(["", "", random.choice(SURGERIES)]),
+                        "allergies": random.choice(["", "", random.choice(ALLERGIES)]),
+                        "current_medications": (
+                            random.choice(MEDICATIONS) if (has_htn or has_dm or has_scd or has_hiv) else ""
+                        ),
+                        "family_history": random.choice([
+                            "",
+                            "Maternal diabetes",
+                            "Paternal hypertension",
+                            "Sickle cell disease — brother is a carrier",
+                            "Breast cancer — maternal aunt",
+                            "",
+                        ]),
+                        "smoking":  random.random() < 0.05,
+                        "alcohol":  random.random() < 0.08,
+                    }
+                )
             
         self.stdout.write(f"  Medical History: {MedicalHistory.objects.count()}")
 

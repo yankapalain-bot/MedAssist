@@ -1,0 +1,17 @@
+{% for u in user_list %}
+<tr>
+  <td><a href="{% url 'clinic:user_detail' u.pk %}" class="link link-primary font-medium">{{ u.username }}</a></td>
+  <td>{{ u.get_full_name|default:"—" }}</td>
+  <td>{{ u.email|default:"—" }}</td>
+  <td>{% if u.is_staff %}<span class="badge badge-success badge-sm">Staff</span>{% else %}<span class="badge badge-ghost badge-sm">User</span>{% endif %}</td>
+  <td>{% if u.is_active %}<span class="badge badge-info badge-sm">Active</span>{% else %}<span class="badge badge-error badge-sm">Inactive</span>{% endif %}</td>
+  <td class="space-x-1">
+    <a href="{% url 'clinic:user_update' u.pk %}" class="btn btn-xs btn-outline">Edit</a>
+    {% if not u.is_superuser %}
+    <a href="{% url 'clinic:user_delete' u.pk %}" class="btn btn-xs btn-error btn-outline">Del</a>
+    {% endif %}
+  </td>
+</tr>
+{% empty %}
+<tr><td colspan="6" class="text-center py-12 opacity-50">No users found.</td></tr>
+{% endfor %}

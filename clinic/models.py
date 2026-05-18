@@ -111,23 +111,66 @@ class Patient(TimeStampedModel):
 
 class MedicalHistory(TimeStampedModel):
     """
-    Stores basic medical background for a patient.    
-    One patient has one medical history record.
+    Antécédents médicaux d'une patiente.    
+    Une patiente a au plus un dossier d'antécédents (OneToOneField).
     """
+    BLOOD_GROUPS = [
+        ("A+", "A+"), ("A-", "A-"),
+        ("B+", "B+"), ("B-", "B-"),
+        ("AB+", "AB+"), ("AB-", "AB-"),
+        ("O+", "O+"), ("O-", "O-"),
+        ("unknown", "Inconnu"),
+    ]
 
     patient = models.OneToOneField(
         Patient,
         on_delete=models.CASCADE,
         related_name="medical_history",
     )
-
-    allergies = models.TextField(blank=True)
-    chronic_conditions = models.TextField(blank=True)
-    medications = models.TextField(blank=True)
-    past_surgeries = models.TextField(blank=True)
+    blood_group = models.CharField(
+        max_length=10, choices=BLOOD_GROUPS, default="unknown",
+        verbose_name="Blood type"
+    )
+    # ── Antécédents chroniques ────────────────────────────────────────────
+    hypertension          = models.BooleanField(default=False, verbose_name="High blood pressure")
+    diabetes              = models.BooleanField(default=False, verbose_name="Diabetes")
+    sickle_cell_disease   = models.BooleanField(default=False, verbose_name="Sickle cell disease")
+    hiv_positive          = models.BooleanField(default=False, verbose_name="HIV-positive")
+    tuberculosis          = models.BooleanField(default=False, verbose_name="Tuberculosis")
+    hepatitis_b           = models.BooleanField(default=False, verbose_name="Hepatitis B")
+    epilepsy              = models.BooleanField(default=False, verbose_name="Epilepsy")
+    asthma                = models.BooleanField(default=False, verbose_name="Asthma")
+    other_chronic         = models.TextField(
+        blank=True, verbose_name="Other chronic conditions",
+        help_text="List any other chronic conditions."
+    )
+    # ── Chirurgies ────────────────────────────────────────────────────────
+    previous_surgeries    = models.TextField(
+        blank=True, verbose_name="Previous surgeries",
+        help_text="Eg : Cesarean section in 2019, appendectomy in 2015."
+    )
+    # ── Allergies ─────────────────────────────────────────────────────────
+    allergies             = models.TextField(
+        blank=True, verbose_name="Known allergies",
+        help_text="Medications, foods, latex, etc."
+    )
+    # ── Médicaments en cours ──────────────────────────────────────────────
+    current_medications   = models.TextField(
+        blank=True, verbose_name="Current medications",
+        help_text="Name, dose, frequency."
+    )
+    # ── Antécédents familiaux ─────────────────────────────────────────────
+    family_history        = models.TextField(
+        blank=True, verbose_name="Family history",
+        help_text="Eg : Maternal diabetes, paternal hypertension."
+    )
+    # ── Habitudes de vie ──────────────────────────────────────────────────
+    smoking               = models.BooleanField(default=False, verbose_name="Smoking")
+    alcohol               = models.BooleanField(default=False, verbose_name="Alcohol consumption")
+    additional_notes      = models.TextField(blank=True, verbose_name="Additional notes")
 
     def __str__(self):
-        return f"Medical history for {self.patient}"
+        return f"Antécédents — {self.patient}"
 
     def get_absolute_url(self):
         return reverse("clinic:patient_detail", args=[self.patient_id])
