@@ -1,0 +1,28 @@
+{% extends "clinic/base.html" %}
+{% block title %}Note — {{ consultationnote.patient }} — MedAssistant{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex items-center gap-4">
+  <a href="{% url 'clinic:consultationnote_list' %}" class="btn btn-ghost btn-sm">← Back</a>
+  <h1 class="text-xl font-bold">{{ consultationnote.patient }} — {{ consultationnote.consultation_date|date:"d M Y" }}</h1>
+  <div class="ml-auto flex gap-2">
+    <a href="{% url 'clinic:consultationnote_update' consultationnote.pk %}" class="btn btn-sm btn-outline">Edit</a>
+    <a href="{% url 'clinic:consultationnote_delete' consultationnote.pk %}" class="btn btn-sm btn-error btn-outline">Delete</a>
+  </div>
+</div>
+
+<div class="card bg-base-100 shadow max-w-3xl">
+  <div class="card-body space-y-4">
+    <div class="flex flex-wrap gap-3 text-sm">
+      <span class="badge badge-lg badge-outline">{{ consultationnote.get_visit_type_display }}</span>
+      <span class="opacity-60">Clinician: {{ consultationnote.clinician.get_full_name|default:consultationnote.clinician.username }}</span>
+      {% if consultationnote.follow_up_date %}<span class="badge badge-warning">Follow-up: {{ consultationnote.follow_up_date|date:"d M Y" }}</span>{% endif %}
+    </div>
+    <div><h3 class="font-semibold text-sm mb-1">Reason for visit</h3><p>{{ consultationnote.reason_for_visit }}</p></div>
+    {% if consultationnote.subjective %}<div><h3 class="font-semibold text-sm mb-1">Subjective (patient report)</h3><p class="whitespace-pre-line">{{ consultationnote.subjective }}</p></div>{% endif %}
+    {% if consultationnote.objective %}<div><h3 class="font-semibold text-sm mb-1">Objective (examination)</h3><p class="whitespace-pre-line">{{ consultationnote.objective }}</p></div>{% endif %}
+    {% if consultationnote.assessment %}<div><h3 class="font-semibold text-sm mb-1">Assessment</h3><p class="whitespace-pre-line">{{ consultationnote.assessment }}</p></div>{% endif %}
+    {% if consultationnote.plan %}<div><h3 class="font-semibold text-sm mb-1">Plan</h3><p class="whitespace-pre-line">{{ consultationnote.plan }}</p></div>{% endif %}
+  </div>
+</div>
+{% endblock %}

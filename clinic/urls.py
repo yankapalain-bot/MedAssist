@@ -58,7 +58,7 @@ urlpatterns = [
     path("notes/",                  views.ConsultationNoteListView.as_view(),   name="consultationnote_list"),
     path("notes/new/",              views.ConsultationNoteCreateView.as_view(), name="consultationnote_create"),
     path("notes/<int:pk>/",         views.ConsultationNoteDetailView.as_view(), name="consultationnote_detail"),
-    path("notes/<int:pk>/edit",     views.ConsultationNoteUpdateView.as_view(), name = "consultationnote_update"),
+    path("notes/<int:pk>/edit",     views.ConsultationNoteUpdateView.as_view(), name="consultationnote_update"),
     path("notes/<int:pk>/delete",   views.ConsultationNoteDeleteView.as_view(), name="consultationnote_delete"),
    
     # ---------------------------------------------------------------------------------------------------------------------

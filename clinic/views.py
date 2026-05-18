@@ -221,6 +221,7 @@ class ConsultationNoteListView(LoginRequiredMixin, HtmxTemplateMixin, Searchable
 
     model = ConsultationNote
     paginate_by = 15
+    template_name = "clinic/notes/consultationnote_list.html"
     partial_template_name = "clinic/includes/consultationnote_rows.html"
     search_fields = ("patient__first_name", "patient__last_name", "reason_for_visit", "assessment")
 
@@ -234,11 +235,13 @@ class ConsultationNoteListView(LoginRequiredMixin, HtmxTemplateMixin, Searchable
 
 class ConsultationNoteDetailView(LoginRequiredMixin, DetailView):
     model = ConsultationNote
+    template_name = "clinic/notes/consultationnote_detail.html"
 
 
 class ConsultationNoteCreateView(LoginRequiredMixin, CreateView):
     model = ConsultationNote
     form_class = ConsultationNoteForm
+    template_name = "clinic/notes/consultationnote_form.html"
 
     def get_initial(self):
         patient_pk = self.request.GET.get("patient")
@@ -254,10 +257,12 @@ class ConsultationNoteCreateView(LoginRequiredMixin, CreateView):
 class ConsultationNoteUpdateView(LoginRequiredMixin, UpdateView):
     model = ConsultationNote
     form_class = ConsultationNoteForm
+    template_name = "clinic/notes/consultationnote_form.html"
 
 
 class ConsultationNoteDeleteView(LoginRequiredMixin, DeleteView):
     model = ConsultationNote
+    template_name = "clinic/notes/consultationnote_confirm_delete.html"
     success_url = reverse_lazy("clinic:consultationnote_list")
 
 
