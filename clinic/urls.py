@@ -35,7 +35,7 @@ urlpatterns = [
     path("medical-history/<int:pk>/edit/", views.MedicalHistoryUpdateView.as_view(), name="medicalhistory_update"), 
 
     # -------------------------------------------------------------------------------------------------
-    # # Patient - Appointment Views
+    # # Patient - Appointment Routes
     # ------------------------------------------------------------------------------------------------- 
 
     path("appointments/",                   views.AppointmentListView.as_view(),    name="appointment_list"),
@@ -45,14 +45,14 @@ urlpatterns = [
     path("appointments/<int:pk>/delete/",   views.AppointmentDeleteView.as_view(),  name="appointment_delete"),
 
     # ---------------------------------------------------------------------------------------------------------------------
-    # # Patient - PregnancyProfile Views
+    # # Patient - PregnancyProfile Routes
     # ---------------------------------------------------------------------------------------------------------------------
     
     path("pregnant/new/",           views.PregnancyProfileCreateView.as_view(),   name="pregnancy_create"),
     path("pregnant/<int:pk>/edit/", views.PregnancyProfileUpdateView.as_view(),   name="pregnancy_update"),
 
     # ---------------------------------------------------------------------------------------------------------------------
-    # # Clinical - ConsultationNote Views
+    # # Clinical - ConsultationNote Routes
     # ---------------------------------------------------------------------------------------------------------------------
 
     path("notes/",                  views.ConsultationNoteListView.as_view(),   name="consultationnote_list"),
@@ -62,7 +62,7 @@ urlpatterns = [
     path("notes/<int:pk>/delete",   views.ConsultationNoteDeleteView.as_view(), name="consultationnote_delete"),
    
     # ---------------------------------------------------------------------------------------------------------------------
-    # # Follow-up reminder Views
+    # # Follow-up reminder Routes
     # ---------------------------------------------------------------------------------------------------------------------
 
     path("reminders/",                  views.FollowUpReminderListView.as_view(),   name="followupreminder_list"),
@@ -73,7 +73,7 @@ urlpatterns = [
 
 
     # ---------------------------------------------------------------------------------------------------------------------
-    #  User Management Views
+    #  User Management Routes
     # ---------------------------------------------------------------------------------------------------------------------
 
     path("users/",                     views.UserListView.as_view(),   name="user_list"),
@@ -82,6 +82,10 @@ urlpatterns = [
     path("users/<int:pk>/edit/",       views.UserUpdateView.as_view(), name="user_update"),
     path("users/<int:pk>/delete/",     views.UserDeleteView.as_view(), name="user_delete"),
 
-    
+    # ---------------------------------------------------------------------------------------------------------------------
+    #  Dashboard 
+    # ---------------------------------------------------------------------------------------------------------------------
+
+    path("", views.DashboardView.as_view(), name="dashboard"),
 ]
 

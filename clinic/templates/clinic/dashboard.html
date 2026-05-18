@@ -1,0 +1,100 @@
+{% extends "clinic/base.html" %}
+{% block title %}Dashboard — MedAssist{% endblock %}
+
+{% block extra_head %}
+{{ bokeh_script }}
+{% endblock %}
+
+
+{% block content %}
+
+
+
+
+
+ 
+
+<!-- ── Upcoming appointments ────────────────────────────────────────────── -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h2 class="card-title text-base">📅 Upcoming Appointments</h2>
+      {% if upcoming_appointments %}
+      <div class="overflow-x-auto">
+        <table class="table table-zebra table-sm">
+          <thead>
+            <tr><th>Patient</th><th>Date / Time</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            {% for appt in upcoming_appointments %}
+            <tr>
+              <td>
+                <a href="{% url 'clinic:patient_detail' appt.patient.pk %}"
+                   class="link link-primary">
+                  {{ appt.patient }}
+                </a>
+              </td>
+              <td class="whitespace-nowrap">{{ appt.start_at|date:"d M Y H:i" }}</td>
+              <td>{{ appt.purpose }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-8 opacity-50">
+        <span class="text-4xl">✅</span>
+        <p class="mt-2">No upcoming appointments in the next 7 days.</p>
+      </div>
+      {% endif %}
+      <div class="card-actions justify-end mt-2">
+        <a href="{% url 'clinic:appointment_list' %}" class="btn btn-sm btn-outline">
+          View all appointments →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overdue reminders -->
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h2 class="card-title text-base text-error">⚠️ Overdue Follow-ups</h2>
+      {% if overdue_items %}
+      <div class="overflow-x-auto">
+        <table class="table table-zebra table-sm">
+          <thead>
+            <tr><th>Patient</th><th>Due</th><th>Task</th></tr>
+          </thead>
+          <tbody>
+            {% for item in overdue_items %}
+            <tr>
+              <td>
+                <a href="{% url 'clinic:patient_detail' item.patient.pk %}"
+                   class="link link-error">
+                  {{ item.patient }}
+                </a>
+              </td>
+              <td class="whitespace-nowrap text-error">{{ item.due_date|date:"d M Y" }}</td>
+              <td>{{ item.title }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-8 opacity-50">
+        <span class="text-4xl">✅</span>
+        <p class="mt-2">No overdue follow-ups. Great work!</p>
+      </div>
+      {% endif %}
+      <div class="card-actions justify-end mt-2">
+        <a href="{% url 'clinic:followupreminder_list' %}" class="btn btn-sm btn-outline">
+          View all reminders →
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

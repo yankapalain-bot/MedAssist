@@ -394,3 +394,53 @@ class UserDeleteView(StaffRequiredMixin, DeleteView):
     model = User
     template_name = "clinic/users/user_confirm_delete.html"
     success_url = reverse_lazy("clinic:user_list")
+
+
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# DASHBOARD Views
+# ---------------------------------------------------------------------------------------------------------------------
+class DashboardView(LoginRequiredMixin, TemplateView):
+    """
+    The home page of the application.
+
+    LoginRequiredMixin: if not logged in, redirect to LOGIN_URL.
+    TemplateView: renders a template with a context dict. No model attached.
+    """
+    template_name = "clinic/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = timezone.localdate()
+        next_7_days = today + timedelta(days=7)
+        past_14_days = today - timedelta(days=13)
+
+        # Summary counts for the stat cards
+        context["patient_count"]      = Patient.objects.count()
+        context["active_patients"]    = Patient.objects.filter(is_active=True).count()
+        context["today_appointments"] = Appointment.objects.filter(
+            start_at__date=today
+        ).count()
+        context["pending_reminders"]  = FollowUpReminder.objects.filter(
+            status="pending"
+        ).count()
+        context["overdue_reminders"]  = FollowUpReminder.objects.filter(
+            status="overdue"
+        ).count()
+
+        # Upcoming appointments list (next 7 days)
+        context["upcoming_appointments"] = (
+            Appointment.objects
+            .filter(start_at__date__gte=today, start_at__date__lte=next_7_days, status="scheduled")
+            .select_related("patient", "clinician")
+            .order_by("start_at")[:10]
+        )
+
+        # Overdue reminders list
+        context["overdue_items"] = (
+            FollowUpReminder.objects
+            .filter(status="overdue")
+            .select_related("patient")
+            .order_by("due_date")[:10]
+        )

@@ -20,7 +20,7 @@
   {% if user.is_authenticated %}
   <div class="navbar bg-primary text-primary-content shadow-lg px-4">
     <div class="navbar-start">
-      <a href="" class="btn btn-ghost text-xl font-bold">
+      <a href="{% url 'clinic:dashboard' %}" class="btn btn-ghost text-xl font-bold">
         🏥 MedAssist
       </a>
     </div>
