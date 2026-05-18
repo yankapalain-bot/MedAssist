@@ -269,6 +269,7 @@ class ConsultationNoteDeleteView(LoginRequiredMixin, DeleteView):
 class FollowUpReminderListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
     model = FollowUpReminder
     paginate_by = 15
+    template_name = "clinic/reminders/followupreminder_list.html"
     partial_template_name = "clinic/includes/followupreminder_rows.html"
     search_fields = ("patient__first_name", "patient__last_name", "title", "status")
 
@@ -280,13 +281,15 @@ class FollowUpReminderListView(LoginRequiredMixin, HtmxTemplateMixin, Searchable
         )
 
 
-class FollowUpReminderDetailView(LoginRequiredMixin, DeleteView):
+class FollowUpReminderDetailView(LoginRequiredMixin, DetailView):
     model = FollowUpReminder
+    template_name = "clinic/reminders/followupreminder_detail.html"
     
 
 class FollowUpReminderCreateView(LoginRequiredMixin, CreateView):
     model = FollowUpReminder
     form_class = FollowUpReminderForm
+    template_name = "clinic/reminders/followupreminder_form.html"
 
     def form_valid(self, form):
         messages.success(self.request, "Follow-up reminder created.")
@@ -296,11 +299,14 @@ class FollowUpReminderCreateView(LoginRequiredMixin, CreateView):
 class FollowUpReminderUpdateView(LoginRequiredMixin, UpdateView):
     model = FollowUpReminder
     form_class = FollowUpReminderForm
+    template_name = "clinic/reminders/followupreminder_form.html"
+    
 
 
 class FollowUpReminderDeleteView(LoginRequiredMixin, DeleteView):
     model = FollowUpReminder
     success_url = reverse_lazy("clinic:followupreminder_list")
+    template_name = "clinic/reminders/followupreminder_confirm_delete.html"
 
     
 

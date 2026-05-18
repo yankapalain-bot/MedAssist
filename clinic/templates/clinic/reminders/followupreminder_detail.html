@@ -1,0 +1,23 @@
+{% extends "clinic/base.html" %}
+{% block title %}Reminder — MedAssistant{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex items-center gap-4">
+  <a href="{% url 'clinic:followupreminder_list' %}" class="btn btn-ghost btn-sm">← Back</a>
+  <h1 class="text-xl font-bold">{{ followupreminder.title }}</h1>
+  <div class="ml-auto flex gap-2">
+    <a href="{% url 'clinic:followupreminder_update' followupreminder.pk %}" class="btn btn-sm btn-outline">Edit</a>
+    <a href="{% url 'clinic:followupreminder_delete' followupreminder.pk %}" class="btn btn-sm btn-error btn-outline">Delete</a>
+  </div>
+</div>
+<div class="card bg-base-100 shadow max-w-xl">
+  <div class="card-body space-y-3">
+    <dl class="space-y-2 text-sm">
+      <div><dt class="font-medium opacity-60">Patient</dt><dd><a href="{% url 'clinic:patient_detail' followupreminder.patient.pk %}" class="link link-primary">{{ followupreminder.patient }}</a></dd></div>
+      <div><dt class="font-medium opacity-60">Due date</dt><dd class="{% if followupreminder.status == 'overdue' %}text-error font-semibold{% endif %}">{{ followupreminder.due_date|date:"d M Y" }}</dd></div>
+      <div><dt class="font-medium opacity-60">Status</dt><dd><span class="badge {% if followupreminder.status == 'overdue' %}badge-error{% elif followupreminder.status == 'done' %}badge-success{% else %}badge-warning{% endif %}">{{ followupreminder.get_status_display }}</span></dd></div>
+      {% if followupreminder.message %}<div><dt class="font-medium opacity-60">Message</dt><dd class="whitespace-pre-line">{{ followupreminder.message }}</dd></div>{% endif %}
+    </dl>
+  </div>
+</div>
+{% endblock %}
