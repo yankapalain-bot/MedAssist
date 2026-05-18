@@ -93,6 +93,7 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
     form_class = PatientForm    
+    template_name = "clinic/patients/patient_form.html"
 
     def form_valid(self, form):
         messages.success(self.request, f"Patient {form.instance} created successfully.")
@@ -102,6 +103,7 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
 class PatientUpdateView(LoginRequiredMixin, UpdateView):
     model = Patient
     form_class = PatientForm
+    template_name = "clinic/patients/patient_form.html"
 
     def form_valid(self, form):
         messages.success(self.request, f"Patient {form.instance} updated.")
@@ -121,6 +123,7 @@ class PatientDeleteView(LoginRequiredMixin, DeleteView):
 class MedicalHistoryCreateView(LoginRequiredMixin, CreateView):
     model = MedicalHistory
     form_class = MedicalHistoryForm
+    template_name = "clinic/patients/medicalhistory_form.html"
 
     def get_initial(self):
         patient_pk = self.request.GET.get("patient")
@@ -136,6 +139,7 @@ class MedicalHistoryCreateView(LoginRequiredMixin, CreateView):
 class MedicalHistoryUpdateView(LoginRequiredMixin, UpdateView):
     model = MedicalHistory
     form_class = MedicalHistoryForm
+    template_name = "clinic/patients/medicalhistory_form.html"
 
     def form_valid(self, form):
         messages.success(self.request, "Patient Medical History updated.")

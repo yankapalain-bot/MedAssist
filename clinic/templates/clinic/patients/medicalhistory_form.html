@@ -1,0 +1,81 @@
+{% extends "clinic/base.html" %}
+{% block title %}
+  {% if object %}Edit history{% else %}New history{% endif %} — MedAssist
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+  <div class="mb-6 flex items-center gap-4">
+    {% if object %}
+    <a href="{% url 'clinic:patient_detail' object.patient.pk %}" class="btn btn-ghost btn-sm">← Retour</a>
+    {% endif %}
+    <h1 class="text-2xl font-bold">
+      {% if object %}Edit history{% else %}New history{% endif %}
+    </h1>
+  </div>
+
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Bloo group -->
+        <div class="form-control mb-6">
+          <label class="label">
+            <span class="label-text font-medium">Blood Group</span>
+          </label>
+          {{ form.blood_group }}
+        </div>
+
+        <!-- Chronic conditions -->
+        <div class="mb-6">
+          <p class="font-medium text-sm mb-3">Chronic conditions</p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {% for field in form %}
+              {% if field.field.widget.input_type == "checkbox" %}
+              <label class="label cursor-pointer justify-start gap-3 bg-base-200 rounded-lg px-3 py-2">
+                {{ field }}
+                <span class="label-text">{{ field.label }}</span>
+              </label>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Additional notes -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {% for field in form %}
+            {% if field.field.widget.input_type != "checkbox" and field.name != "blood_group" %}
+            <div class="form-control {% if field.name == "additional_notes" or field.name == "family_history" %}md:col-span-2{% endif %}">
+              <label class="label">
+                <span class="label-text font-medium">{{ field.label }}</span>
+              </label>
+              {{ field }}
+              {% if field.help_text %}
+              <label class="label">
+                <span class="label-text-alt opacity-60">{{ field.help_text }}</span>
+              </label>
+              {% endif %}
+              {% if field.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ field.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="card-actions justify-end mt-6">
+          {% if object %}
+          <a href="{% url 'clinic:patient_detail' object.patient.pk %}" class="btn btn-ghost">Annuler</a>
+          {% endif %}
+          <button type="submit" class="btn btn-primary">
+            {% if object %}Save{% else %}Create History{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
