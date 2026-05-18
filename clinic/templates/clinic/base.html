@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Med_Assistant{% endblock %}</title>
+
+  <!-- CSS Tailwind + DaisyUI compilé (généré par npm run dev:css) -->
+  <link rel="stylesheet" href="/static/css/main.css" />
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.11" defer></script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+  <!-- ── Barre de navigation ────────────────────────────────────────────── -->
+  {% if user.is_authenticated %}
+  <div class="navbar bg-primary text-primary-content shadow-lg px-4">
+    <div class="navbar-start">
+      <a href="{% url 'clinic:dashboard' %}" class="btn btn-ghost text-xl font-bold">
+        🏥 MedAssist
+      </a>
+    </div>
+
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1 gap-1">
+        <li><a href="{% url 'clinic:patient_list' %}" class="rounded-lg">Patients</a></li>
+        <li><a href="{% url 'clinic:consultationnote_list' %}" class="rounded-lg">Notes</a></li>
+        <li><a href="{% url 'clinic:appointment_list' %}" class="rounded-lg">Appointments</a></li>
+        <li><a href="{% url 'clinic:followupreminder_list' %}" class="rounded-lg">Reminders</a></li>
+        {% if user.is_staff %}
+        <li><a href="{% url 'clinic:user_list' %}" class="rounded-lg">Users</a></li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="navbar-end gap-2">
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
+          <div class="bg-primary-focus text-primary-content rounded-full w-10">
+            <span class="text-sm font-bold">{{ user.get_short_name|first|upper|default:user.username|first|upper }}</span>
+          </div>
+        </div>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 text-base-content rounded-box w-52">
+          <li class="menu-title px-4 py-2">
+            <span class="font-semibold">{{ user.get_full_name|default:user.username }}</span>
+            <span class="text-xs opacity-60">{{ user.email }}</span>
+          </li>
+          <li><a href="{% url 'clinic:user_detail' user.pk %}">My Profile</a></li>
+          {% if user.is_staff %}
+          <li><a href="{% url 'clinic:user_list' %}">Manage Users</a></li>
+          {% endif %}
+          <li>
+            <form method="post" action="{% url 'clinic:logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="w-full text-left text-error">Log out</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ── Messages flash ────────────────────────────────────────────────── -->
+  {% if messages %}
+  <div class="px-4 pt-4 space-y-2 max-w-7xl mx-auto">
+    {% for message in messages %}
+    <div role="alert"
+         class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %} shadow">
+      <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ── Contenu de la page ─────────────────────────────────────────────── -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+</body>
+</html>

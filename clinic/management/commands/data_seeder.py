@@ -14,8 +14,7 @@ from clinic.models import (
     Appointment,
     ClinicalNoteTemplate,
     ConsultationNote,
-    FollowUpReminder,    
-    
+    FollowUpReminder,        
 )
 
 fake = Faker()
