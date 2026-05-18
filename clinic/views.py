@@ -204,6 +204,7 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
 class PregnancyProfileCreateView(LoginRequiredMixin, CreateView):
     model = PregnancyProfile
     form_class = PregnancyProfileForm
+    template_name = "clinic/patients/pregnancyprofile_form.html"
 
     def get_initial(self):
         patient_pk = self.request.GET.get("patient")
@@ -215,6 +216,7 @@ class PregnancyProfileCreateView(LoginRequiredMixin, CreateView):
 class PregnancyProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = PregnancyProfile
     form_class = PregnancyProfileForm
+    template_name = "clinic/patients/pregnancyprofile_form.html"
 
 
 # ---------------------------------------------------------------------------------------------------------

@@ -1,0 +1,258 @@
+{% extends "clinic/base.html" %}
+{% block title %}{{ patient }} — MedAssistant{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex items-center gap-4">
+  <a href="{% url 'clinic:patient_list' %}" class="btn btn-ghost btn-sm">← Back</a>
+  <h1 class="text-2xl font-bold">{{ patient }}</h1>
+  {% if patient.is_active %}
+  <span class="badge badge-success">Active</span>
+  {% else %}
+  <span class="badge badge-ghost">Inactive</span>
+  {% endif %}
+  <div class="ml-auto flex gap-2">
+    <a href="{% url 'clinic:patient_update' patient.pk %}" class="btn btn-sm btn-outline">Edit</a>
+    <a href="{% url 'clinic:patient_delete' patient.pk %}" class="btn btn-sm btn-error btn-outline">Delete</a>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+  <!-- Patient info card -->
+  <div class="card bg-base-100 shadow lg:col-span-1">
+    <div class="card-body">
+      <h2 class="card-title text-base">Patient Information</h2>
+      <dl class="space-y-2 text-sm">
+        <div><dt class="font-medium opacity-60">Sex</dt><dd>{{ patient.get_sex_display }}</dd></div>
+        <div><dt class="font-medium opacity-60">Date of birth</dt><dd>{{ patient.date_of_birth|date:"d M Y"|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">Phone</dt><dd>{{ patient.phone|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">Email</dt><dd>{{ patient.email|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">City</dt><dd>{{ patient.city|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">Region</dt><dd>{{ patient.region|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">Occupation</dt><dd>{{ patient.occupation|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">Emergency contact</dt><dd>{{ patient.emergency_contact_name|default:"—" }} {{ patient.emergency_contact_phone }}</dd></div>
+      </dl>
+      {% if patient.notes %}
+      <div class="divider"></div>
+      <p class="text-sm">{{ patient.notes }}</p>
+      {% endif %}
+
+      <!-- Pregnancy profile section -->
+      <div class="divider"></div>
+      {% if pregnancy_profile %}
+      <h3 class="font-semibold text-sm">Pregnancy Profile</h3>
+      <dl class="space-y-1 text-sm">
+        <div><dt class="font-medium opacity-60">Gravida / Para</dt><dd>G{{ pregnancy_profile.gravida }} P{{ pregnancy_profile.para }}</dd></div>
+        <div><dt class="font-medium opacity-60">LMP</dt><dd>{{ pregnancy_profile.last_menstrual_period|date:"d M Y"|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">EDD</dt><dd>{{ pregnancy_profile.estimated_delivery_date|date:"d M Y"|default:"—" }}</dd></div>
+        <div><dt class="font-medium opacity-60">Risk level</dt>
+          <dd>
+            <span class="badge {% if pregnancy_profile.risk_level == 'high' %}badge-error{% elif pregnancy_profile.risk_level == 'moderate' %}badge-warning{% else %}badge-success{% endif %} badge-sm">
+              {{ pregnancy_profile.get_risk_level_display }}
+            </span>
+          </dd>
+        </div>
+      </dl>
+      <a href="{% url 'clinic:pregnancy_update' pregnancy_profile.pk %}" class="btn btn-xs btn-outline mt-2">Edit profile</a>
+      {% else %}
+      <p class="text-sm opacity-60">No pregnancy profile.</p>
+      <a href="{% url 'clinic:pregnancy_create' %}?patient={{ patient.pk }}" class="btn btn-xs btn-outline mt-2">Add pregnancy profile</a>
+      {% endif %}
+
+      <!-- Medical History-->
+      <div class="divider"></div>
+      {% if medical_history %}
+        <h3 class="font-semibold text-sm mb-2">Medical History</h3>
+        <dl class="space-y-1 text-sm">
+        <div>
+            <dt class="font-medium opacity-60">Blood Group</dt>
+            <dd>
+            <span class="badge badge-outline badge-sm">{{ medical_history.blood_group }}</span>
+            </dd>
+        </div>    
+
+        {% with flags=medical_history %}
+        <div>
+            <dt class="font-medium opacity-60 mb-1">Chronic Conditions</dt>
+            <dd class="flex flex-wrap gap-1">
+            {% if flags.hypertension %}
+                <span class="badge badge-warning badge-sm">HTA</span>
+            {% endif %}
+            {% if flags.diabetes %}
+                <span class="badge badge-warning badge-sm">Diabetes</span>
+            {% endif %}
+            {% if flags.sickle_cell_disease %}
+                <span class="badge badge-error badge-sm">Sickle Cell Disease</span>
+            {% endif %}
+            {% if flags.hiv_positive %}
+                <span class="badge badge-error badge-sm">VIH+</span>
+            {% endif %}
+            {% if flags.tuberculosis %}
+                <span class="badge badge-error badge-sm">Tuberculosis</span>
+            {% endif %}
+            {% if flags.hepatitis_b %}
+                <span class="badge badge-warning badge-sm">Hepatitis B</span>
+            {% endif %}
+            {% if flags.epilepsy %}
+                <span class="badge badge-info badge-sm">Epilepsy</span>
+            {% endif %}
+            {% if flags.asthma %}
+                <span class="badge badge-info badge-sm">Asthma</span>
+            {% endif %}
+            {% if not flags.hypertension and not flags.diabetes and not flags.sickle_cell_disease
+                    and not flags.hiv_positive and not flags.tuberculosis and not flags.hepatitis_b
+                    and not flags.epilepsy and not flags.asthma %}
+                <span class="opacity-50 text-xs">No chronic conditions reported</span>
+            {% endif %}
+            </dd>
+        </div>
+        {% endwith %}
+
+        {% if medical_history.allergies %}
+        <div>
+            <dt class="font-medium opacity-60">Allergies</dt>
+            <dd>{{ medical_history.allergies }}</dd>
+        </div>
+        {% endif %}
+
+        {% if medical_history.current_medications %}
+        <div>
+            <dt class="font-medium opacity-60">Current Medications</dt>
+            <dd>{{ medical_history.current_medications }}</dd>
+        </div>
+        {% endif %}
+
+        {% if medical_history.previous_surgeries %}
+        <div>
+            <dt class="font-medium opacity-60">Surgeries</dt>
+            <dd>{{ medical_history.previous_surgeries }}</dd>
+        </div>
+        {% endif %}
+
+        <div class="flex gap-2 mt-1">
+            {% if medical_history.smoking %}
+            <span class="badge badge-ghost badge-sm">🚬 Somoking</span>
+            {% endif %}
+            {% if medical_history.alcohol %}
+            <span class="badge badge-ghost badge-sm">🍺 Alcohol</span>
+            {% endif %}
+        </div>
+        </dl>
+        <a href="{% url 'clinic:medicalhistory_update' medical_history.pk %}"
+            class="btn btn-xs btn-outline mt-2">
+            Edit History
+        </a>
+
+    {% else %}
+        <p class="text-sm opacity-60">No medical history recorded.</p>
+        <a href="{% url 'clinic:medicalhistory_create' %}?patient={{ patient.pk }}"
+        class="btn btn-xs btn-outline mt-2">
+        Add History
+        </a>
+    {% endif %}     
+
+    </div>
+  </div>
+  
+
+  <!-- Right column: consultations, appointments, reminders -->
+  <div class="lg:col-span-2 space-y-6">
+
+    <!-- Quick actions -->
+    <div class="flex flex-wrap gap-2">
+      <a href="{% url 'clinic:consultationnote_create' %}?patient={{ patient.pk }}" class="btn btn-sm btn-primary">+ Add Note</a>
+      <a href="{% url 'clinic:appointment_create' %}?patient={{ patient.pk }}" class="btn btn-sm btn-secondary">+ Book Appointment</a>
+      <a href="{% url 'clinic:followupreminder_create' %}?patient={{ patient.pk }}" class="btn btn-sm btn-accent">+ Add Reminder</a>
+    </div>
+
+    <!-- Recent consultations -->
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <h2 class="card-title text-base">Recent Consultation Notes</h2>
+        {% if consultations %}
+        <div class="overflow-x-auto">
+          <table class="table table-sm table-zebra">
+            <thead><tr><th>Date</th><th>Type</th><th>Reason</th><th></th></tr></thead>
+            <tbody>
+              {% for note in consultations %}
+              <tr>
+                <td class="whitespace-nowrap">{{ note.consultation_date|date:"d M Y" }}</td>
+                <td><span class="badge badge-sm badge-outline">{{ note.get_visit_type_display }}</span></td>
+                <td>{{ note.reason_for_visit }}</td>
+                <td><a href="{% url 'clinic:consultationnote_detail' note.pk %}" class="link link-primary text-xs">View</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-sm opacity-50 py-4 text-center">No consultation notes yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Upcoming appointments -->
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <h2 class="card-title text-base">Appointments</h2>
+        {% if appointments %}
+        <div class="overflow-x-auto">
+          <table class="table table-sm table-zebra">
+            <thead><tr><th>Date</th><th>Purpose</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              {% for appt in appointments %}
+              <tr>
+                <td class="whitespace-nowrap">{{ appt.start_at|date:"d M Y H:i" }}</td>
+                <td>{{ appt.purpose }}</td>
+                <td>
+                  <span class="badge badge-sm {% if appt.status == 'done' %}badge-success{% elif appt.status == 'cancelled' or appt.status == 'no_show' %}badge-error{% else %}badge-info{% endif %}">
+                    {{ appt.get_status_display }}
+                  </span>
+                </td>
+                <td><a href="{% url 'clinic:appointment_detail' appt.pk %}" class="link text-xs">View</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-sm opacity-50 py-4 text-center">No appointments yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Reminders -->
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <h2 class="card-title text-base">Follow-up Reminders</h2>
+        {% if followups %}
+        <div class="overflow-x-auto">
+          <table class="table table-sm table-zebra">
+            <thead><tr><th>Due</th><th>Task</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              {% for item in followups %}
+              <tr>
+                <td class="whitespace-nowrap {% if item.status == 'overdue' %}text-error{% endif %}">
+                  {{ item.due_date|date:"d M Y" }}
+                </td>
+                <td>{{ item.title }}</td>
+                <td>
+                  <span class="badge badge-sm {% if item.status == 'overdue' %}badge-error{% elif item.status == 'done' %}badge-success{% else %}badge-warning{% endif %}">
+                    {{ item.get_status_display }}
+                  </span>
+                </td>
+                <td><a href="{% url 'clinic:followupreminder_detail' item.pk %}" class="link text-xs">View</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-sm opacity-50 py-4 text-center">No follow-up reminders.</p>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

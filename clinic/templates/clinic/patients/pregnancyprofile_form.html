@@ -1,0 +1,173 @@
+{% extends "clinic/base.html" %}
+{% block title %}
+  {% if object %}Edit Pregnancy Profile{% else %}New Pregnancy Profile{% endif %} — MedAssist
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="mb-6 flex items-center gap-4">
+    {% if object %}
+    <a href="{% url 'clinic:patient_detail' object.patient.pk %}" class="btn btn-ghost btn-sm">← Back</a>
+    {% else %}
+    <a href="{% url 'clinic:patient_list' %}" class="btn btn-ghost btn-sm">← Back</a>
+    {% endif %}
+    <h1 class="text-2xl font-bold">
+      {% if object %}Edit Pregnancy Profile{% else %}New Pregnancy Profile{% endif %}
+    </h1>
+  </div>
+
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Obstetric Data — grille 2 colonnes -->
+        <div class="mb-4">
+          <p class="font-semibold text-sm mb-3 opacity-70 uppercase tracking-wide">
+            Obstetric Data
+          </p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text font-medium">{{ form.gravida.label }}</span>
+              </label>
+              {{ form.gravida }}
+              {% if form.gravida.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ form.gravida.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text font-medium">{{ form.para.label }}</span>
+              </label>
+              {{ form.para }}
+              {% if form.para.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ form.para.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text font-medium">{{ form.abortions.label }}</span>
+              </label>
+              {{ form.abortions }}
+              {% if form.abortions.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ form.abortions.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text font-medium">{{ form.living_children.label }}</span>
+              </label>
+              {{ form.living_children }}
+              {% if form.living_children.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ form.living_children.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Dates -->
+        <div class="mb-4">
+          <p class="font-semibold text-sm mb-3 opacity-70 uppercase tracking-wide">Dates</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text font-medium">{{ form.last_menstrual_period.label }}</span>
+              </label>
+              {{ form.last_menstrual_period }}
+              {% if form.last_menstrual_period.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ form.last_menstrual_period.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text font-medium">{{ form.estimated_delivery_date.label }}</span>
+              </label>
+              {{ form.estimated_delivery_date }}
+              {% if form.estimated_delivery_date.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ form.estimated_delivery_date.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Risks and Monitoring -->
+        <div class="mb-4">
+          <p class="font-semibold text-sm mb-3 opacity-70 uppercase tracking-wide">
+            Risk and Monitoring
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text font-medium">{{ form.risk_level.label }}</span>
+              </label>
+              {{ form.risk_level }}
+              {% if form.risk_level.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ form.risk_level.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text font-medium">{{ form.antenatal_facility.label }}</span>
+              </label>
+              {{ form.antenatal_facility }}
+              {% if form.antenatal_facility.errors %}
+              <label class="label">
+                <span class="label-text-alt text-error">{{ form.antenatal_facility.errors|join:", " }}</span>
+              </label>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-control mt-4">
+            <label class="label">
+              <span class="label-text font-medium">{{ form.high_risk_note.label }}</span>
+            </label>
+            {{ form.high_risk_note }}
+            {% if form.high_risk_note.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">{{ form.high_risk_note.errors|join:", " }}</span>
+            </label>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card-actions justify-end mt-6">
+          {% if object %}
+          <a href="{% url 'clinic:patient_detail' object.patient.pk %}" class="btn btn-ghost">Annuler</a>
+          {% else %}
+          <a href="{% url 'clinic:patient_list' %}" class="btn btn-ghost">Annuler</a>
+          {% endif %}
+          <button type="submit" class="btn btn-primary">
+            {% if object %}Save{% else %}Create Profile{% endif %}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
