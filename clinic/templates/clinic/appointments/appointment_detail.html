@@ -1,0 +1,27 @@
+{% extends "clinic/base.html" %}
+{% block title %}Appointment — MedAssistant{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex items-center gap-4">
+  <a href="{% url 'clinic:appointment_list' %}" class="btn btn-ghost btn-sm">← Back</a>
+  <h1 class="text-xl font-bold">{{ appointment }}</h1>
+  <div class="ml-auto flex gap-2">
+    <a href="{% url 'clinic:appointment_update' appointment.pk %}" class="btn btn-sm btn-outline">Edit</a>
+    <a href="{% url 'clinic:appointment_delete' appointment.pk %}" class="btn btn-sm btn-error btn-outline">Delete</a>
+  </div>
+</div>
+<div class="card bg-base-100 shadow max-w-xl">
+  <div class="card-body space-y-3">
+    <dl class="space-y-2 text-sm">
+      <div><dt class="font-medium opacity-60">Patient</dt><dd><a href="{% url 'clinic:patient_detail' appointment.patient.pk %}" class="link link-primary">{{ appointment.patient }}</a></dd></div>
+      <div><dt class="font-medium opacity-60">Clinician</dt><dd>{{ appointment.clinician.get_full_name|default:appointment.clinician.username }}</dd></div>
+      <div><dt class="font-medium opacity-60">Date / Time</dt><dd>{{ appointment.start_at|date:"d M Y H:i" }}</dd></div>
+      <div><dt class="font-medium opacity-60">Duration</dt><dd>{{ appointment.duration_minutes }} minutes</dd></div>
+      <div><dt class="font-medium opacity-60">Purpose</dt><dd>{{ appointment.purpose }}</dd></div>
+      <div><dt class="font-medium opacity-60">Location</dt><dd>{{ appointment.location|default:"—" }}</dd></div>
+      <div><dt class="font-medium opacity-60">Status</dt><dd><span class="badge {% if appointment.status == 'done' %}badge-success{% elif appointment.status == 'cancelled' or appointment.status == 'no_show' %}badge-error{% else %}badge-info{% endif %}">{{ appointment.get_status_display }}</span></dd></div>
+      {% if appointment.notes %}<div><dt class="font-medium opacity-60">Notes</dt><dd class="whitespace-pre-line">{{ appointment.notes }}</dd></div>{% endif %}
+    </dl>
+  </div>
+</div>
+{% endblock %}

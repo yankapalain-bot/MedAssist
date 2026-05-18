@@ -1,0 +1,19 @@
+{% for appt in appointment_list %}
+<tr>
+  <td><a href="{% url 'clinic:patient_detail' appt.patient.pk %}" class="link link-primary">{{ appt.patient }}</a></td>
+  <td class="whitespace-nowrap">{{ appt.start_at|date:"d M Y H:i" }}</td>
+  <td>{{ appt.purpose|truncatechars:40 }}</td>
+  <td>
+    <span class="badge badge-sm {% if appt.status == 'done' %}badge-success{% elif appt.status == 'cancelled' or appt.status == 'no_show' %}badge-error{% else %}badge-info{% endif %}">
+      {{ appt.get_status_display }}
+    </span>
+  </td>
+  <td class="space-x-1">
+    <a href="{% url 'clinic:appointment_detail' appt.pk %}" class="btn btn-xs btn-outline">View</a>
+    <a href="{% url 'clinic:appointment_update' appt.pk %}" class="btn btn-xs btn-outline">Edit</a>
+    <a href="{% url 'clinic:appointment_delete' appt.pk %}" class="btn btn-xs btn-error btn-outline">Del</a>
+  </td>
+</tr>
+{% empty %}
+<tr><td colspan="5" class="text-center py-12 opacity-50">No appointments found.</td></tr>
+{% endfor %}

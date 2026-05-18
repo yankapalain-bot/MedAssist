@@ -1,0 +1,29 @@
+{% extends "clinic/base.html" %}
+{% block title %}{% if object %}Edit{% else %}New{% endif %} Appointment — MedAssistant{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="mb-6 flex items-center gap-4">
+    <a href="{% url 'clinic:appointment_list' %}" class="btn btn-ghost btn-sm">← Back</a>
+    <h1 class="text-2xl font-bold">{% if object %}Edit Appointment{% else %}New Appointment{% endif %}</h1>
+  </div>
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-control mb-4">
+          <label class="label"><span class="label-text font-medium">{{ field.label }}{% if field.field.required %} <span class="text-error">*</span>{% endif %}</span></label>
+          {{ field }}
+          {% if field.errors %}<label class="label"><span class="label-text-alt text-error">{{ field.errors|join:", " }}</span></label>{% endif %}
+        </div>
+        {% endfor %}
+        <div class="card-actions justify-end mt-4">
+          <a href="{% url 'clinic:appointment_list' %}" class="btn btn-ghost">Cancel</a>
+          <button type="submit" class="btn btn-primary">{% if object %}Save Changes{% else %}Book Appointment{% endif %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
