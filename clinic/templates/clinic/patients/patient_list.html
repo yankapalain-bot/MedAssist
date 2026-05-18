@@ -1,0 +1,67 @@
+{% extends "clinic/base.html" %}
+{% block title %}Patients — MedAssistant{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold">Patients</h1>
+  <a href="{% url 'clinic:patient_create' %}" class="btn btn-primary btn-sm">
+    + New Patient
+  </a>
+</div>
+
+<!-- Search box -->
+<!-- hx-get: send a GET request to this URL                            -->
+<!-- hx-target: replace the element with id="patient-table-body"      -->
+<!-- hx-trigger: fire when the user stops typing for 300ms            -->
+<!-- hx-push-url: update the browser URL with the search term         -->
+<div class="mb-4">
+  <input
+    type="search"
+    name="q"
+    value="{{ search_query }}"
+    placeholder="Search by name, phone or city…"
+    class="input input-bordered w-full max-w-sm"
+    hx-get="{% url 'clinic:patient_list' %}"
+    hx-target="#patient-table-body"
+    hx-trigger="input changed delay:300ms, search"
+    hx-push-url="true"
+  />
+</div>
+
+<div class="card bg-base-100 shadow overflow-x-auto">
+  <table class="table table-zebra">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Sex</th>
+        <th>City</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="patient-table-body">
+      {% include "clinic/includes/patient_rows.html" %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="flex justify-center mt-6">
+  <div class="join">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}"
+       class="join-item btn btn-sm">«</a>
+    {% endif %}
+    <button class="join-item btn btn-sm btn-active">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </button>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&q={{ search_query }}"
+       class="join-item btn btn-sm">»</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

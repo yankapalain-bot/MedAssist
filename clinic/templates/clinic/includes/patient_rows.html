@@ -1,0 +1,38 @@
+{# This partial is rendered by HTMX when the user types in the search box. #}
+{# It is also included in the full patient_list.html on first page load.   #}
+{% for patient in patient_list %}
+<tr>
+  <td>
+    <a href="{% url 'clinic:patient_detail' patient.pk %}"
+       class="link link-primary font-medium">
+      {{ patient }}
+    </a>
+  </td>
+  <td>{{ patient.get_sex_display }}</td>
+  <td>{{ patient.city|default:"—" }}</td>
+  <td>{{ patient.phone|default:"—" }}</td>
+  <td>
+    {% if patient.is_active %}
+    <span class="badge badge-success badge-sm">Active</span>
+    {% else %}
+    <span class="badge badge-ghost badge-sm">Inactive</span>
+    {% endif %}
+  </td>
+  <td class="space-x-1">
+    <a href="{% url 'clinic:patient_update' patient.pk %}"
+       class="btn btn-xs btn-outline">Edit</a>
+    <a href="{% url 'clinic:patient_delete' patient.pk %}"
+       class="btn btn-xs btn-error btn-outline">Delete</a>
+  </td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="6" class="text-center py-12 opacity-50">
+    <div class="text-4xl mb-2">🔍</div>
+    <p>No patients found.</p>
+    {% if search_query %}
+    <p class="text-sm mt-1">No results for "<strong>{{ search_query }}</strong>".</p>
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}

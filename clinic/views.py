@@ -57,12 +57,14 @@ from .models import (
 class PatientListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
     model = Patient    
     paginate_by = 15
+    template_name = "clinic/patients/patient_list.html"
     partial_template_name = "clinic/includes/patient_rows.html"
     search_fields = ("first_name", "last_name", "phone", "city", "occupation")
 
 
 class PatientDetailView(LoginRequiredMixin, DetailView):
     model = Patient
+    template_name = "clinic/patients/patient_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -90,7 +92,7 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
 
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
-    form_class = PatientForm
+    form_class = PatientForm    
 
     def form_valid(self, form):
         messages.success(self.request, f"Patient {form.instance} created successfully.")
@@ -108,6 +110,7 @@ class PatientUpdateView(LoginRequiredMixin, UpdateView):
 
 class PatientDeleteView(LoginRequiredMixin, DeleteView):
     model = Patient
+    template_name = "clinic/patients/patient_confirm_delete.html"
     success_url = reverse_lazy("clinic:patient_list")
 
 
