@@ -45,14 +45,9 @@ from .models import (
 )
 # Create your views here.
 
-# ----------------------------------------------------------------------------
-# Auth Views
-# ----------------------------------------------------------------------------
-
-
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
 # Patient Views
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
 
 class PatientListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
     model = Patient    
@@ -116,9 +111,9 @@ class PatientDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("clinic:patient_list")
 
 
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
 # # Patient - MedicalHistory Views
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
 
 class MedicalHistoryCreateView(LoginRequiredMixin, CreateView):
     model = MedicalHistory
@@ -147,59 +142,9 @@ class MedicalHistoryUpdateView(LoginRequiredMixin, UpdateView):
 
 
 
-# -------------------------------------------------------------------------------------------------
-# # Patient - Appointment Views
-# -------------------------------------------------------------------------------------------------
-
-class AppointmentListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
-    model = Appointment
-    paginate_by = 15
-    template_name = "clinic/appointments/appointment_list.html"
-    partial_template_name = "clinic/includes/appointment_rows.html"
-    search_fields = ("patient__first_name", "patient__last_name", "purpose", "location")
-
-    def get_queryset(self):
-        return(
-            super().get_queryset()
-            .select_related("patient", "clinician")
-            .order_by("start_at")
-        )
-
-
-class AppointmentDetailView(LoginRequiredMixin, DetailView):
-    model = Appointment
-    template_name = "clinic/appointments/appointment_detail.html"
-
-
-class AppointmentCreateView(LoginRequiredMixin, CreateView):
-    model = Appointment
-    form_class = AppointmentForm
-    template_name = "clinic/appointments/appointment_form.html"
-
-    def get_initial(self):
-        return {"clinician": self.request.user.pk}
-    
-    def form_valid(self, form):
-        messages.success(self.request, "Appointment schedules.")
-        return super().form_valide(form)
-
-
-class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
-    model = Appointment
-    form_class = AppointmentForm
-    template_name = "clinic/appointments/appointment_form.html"
-
-
-class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
-    model = Appointment
-    success_url = reverse_lazy("clinic:appointment_list")
-    template_name = "clinic/appointments/appointment_confirm_delete.html"
-
-
-
-# -------------------------------------------------------------------------------------------------
-# # Patient - PregnancyProfile Views
-# -------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
+# ## Patient - PregnancyProfile Views
+# ---------------------------------------------------------------------------------------------------------------------
 
 class PregnancyProfileCreateView(LoginRequiredMixin, CreateView):
     model = PregnancyProfile
@@ -219,9 +164,9 @@ class PregnancyProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "clinic/patients/pregnancyprofile_form.html"
 
 
-# ---------------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
 # # Clinical - ConsultationNote Views
-# ---------------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
 
 class ConsultationNoteListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
 
@@ -273,9 +218,61 @@ class ConsultationNoteDeleteView(LoginRequiredMixin, DeleteView):
 
 
 
-# ---------------------------------------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Appointment Views
+# ---------------------------------------------------------------------------------------------------------------------
+
+class AppointmentListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
+    model = Appointment
+    paginate_by = 15
+    template_name = "clinic/appointments/appointment_list.html"
+    partial_template_name = "clinic/includes/appointment_rows.html"
+    search_fields = ("patient__first_name", "patient__last_name", "purpose", "location")
+
+    def get_queryset(self):
+        return(
+            super().get_queryset()
+            .select_related("patient", "clinician")
+            .order_by("start_at")
+        )
+
+
+class AppointmentDetailView(LoginRequiredMixin, DetailView):
+    model = Appointment
+    template_name = "clinic/appointments/appointment_detail.html"
+
+
+class AppointmentCreateView(LoginRequiredMixin, CreateView):
+    model = Appointment
+    form_class = AppointmentForm
+    template_name = "clinic/appointments/appointment_form.html"
+
+    def get_initial(self):
+        return {"clinician": self.request.user.pk}
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Appointment schedules.")
+        return super().form_valide(form)
+
+
+class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    form_class = AppointmentForm
+    template_name = "clinic/appointments/appointment_form.html"
+
+
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
+    success_url = reverse_lazy("clinic:appointment_list")
+    template_name = "clinic/appointments/appointment_confirm_delete.html"
+
+
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 # # Follow-up reminder Views
-# ---------------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
 
 class FollowUpReminderListView(LoginRequiredMixin, HtmxTemplateMixin, SearchableListMixin, ListView):
     model = FollowUpReminder

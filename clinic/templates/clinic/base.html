@@ -27,12 +27,12 @@
 
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1 gap-1">
-        <li><a href="#" class="rounded-lg">Patients</a></li>
-        <li><a href="#" class="rounded-lg">Notes</a></li>
-        <li><a href="#" class="rounded-lg">Appointments</a></li>
-        <li><a href="#" class="rounded-lg">Reminders</a></li>
+        <li><a href="{% url 'clinic:patient_list' %}" class="rounded-lg">Patients</a></li>
+        <li><a href="{% url 'clinic:consultationnote_list' %}" class="rounded-lg">Notes</a></li>
+        <li><a href="{% url 'clinic:appointment_list' %}" class="rounded-lg">Appointments</a></li>
+        <li><a href="{% url 'clinic:followupreminder_list' %}" class="rounded-lg">Reminders</a></li>
         {% if user.is_staff %}
-        <li><a href="{% url 'clinic:user_list' %}" class="rounded-lg">Users</a></li>
+            <li><a href="{% url 'clinic:user_list' %}" class="rounded-lg">Users</a></li>
         {% endif %}
       </ul>
     </div>
@@ -83,4 +83,18 @@
   </main>
 
 </body>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the CSRF cookie value
+    function getCookie(name) {
+      let v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+      return v ? v[2] : null;
+    }
+    // Tell HTMX to send the CSRF token header with every request
+    document.body.addEventListener('htmx:configRequest', function (event) {
+      event.detail.headers['X-CSRFToken'] = getCookie('csrftoken');
+    });
+  });
+</script>
 </html>
