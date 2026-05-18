@@ -1,0 +1,15 @@
+{% for item in followupreminder_list %}
+<tr>
+  <td><a href="{% url 'clinic:patient_detail' item.patient.pk %}" class="link link-primary">{{ item.patient }}</a></td>
+  <td class="whitespace-nowrap {% if item.status == 'overdue' %}text-error font-semibold{% endif %}">{{ item.due_date|date:"d M Y" }}</td>
+  <td>{{ item.title|truncatechars:50 }}</td>
+  <td><span class="badge badge-sm {% if item.status == 'overdue' %}badge-error{% elif item.status == 'done' %}badge-success{% else %}badge-warning{% endif %}">{{ item.get_status_display }}</span></td>
+  <td class="space-x-1">
+    <a href="{% url 'clinic:followupreminder_detail' item.pk %}" class="btn btn-xs btn-outline">View</a>
+    <a href="{% url 'clinic:followupreminder_update' item.pk %}" class="btn btn-xs btn-outline">Edit</a>
+    <a href="{% url 'clinic:followupreminder_delete' item.pk %}" class="btn btn-xs btn-error btn-outline">Del</a>
+  </td>
+</tr>
+{% empty %}
+<tr><td colspan="5" class="text-center py-12 opacity-50">No reminders found. ✅</td></tr>
+{% endfor %}

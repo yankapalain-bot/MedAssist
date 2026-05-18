@@ -1,0 +1,33 @@
+{% extends "clinic/base.html" %}
+{% block title %}Reminders — MedAssistant{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold">Follow-up Reminders</h1>
+  <a href="{% url 'clinic:followupreminder_create' %}" class="btn btn-primary btn-sm">+ New Reminder</a>
+</div>
+<div class="mb-4">
+  <input type="search" name="q" value="{{ search_query }}"
+         placeholder="Search by patient or task…"
+         class="input input-bordered w-full max-w-sm"
+         hx-get="{% url 'clinic:followupreminder_list' %}"
+         hx-target="#reminder-table-body"
+         hx-trigger="input changed delay:300ms, search"
+         hx-push-url="true" />
+</div>
+<div class="card bg-base-100 shadow overflow-x-auto">
+  <table class="table table-zebra">
+    <thead><tr><th>Patient</th><th>Due date</th><th>Task</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="reminder-table-body">{% include "clinic/includes/followupreminder_rows.html" %}</tbody>
+  </table>
+</div>
+{% if is_paginated %}
+<div class="flex justify-center mt-6">
+  <div class="join">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}" class="join-item btn btn-sm">«</a>{% endif %}
+    <button class="join-item btn btn-sm btn-active">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</button>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&q={{ search_query }}" class="join-item btn btn-sm">»</a>{% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

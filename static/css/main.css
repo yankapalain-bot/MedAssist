@@ -11,6 +11,7 @@
     --spacing: 0.25rem;
     --container-sm: 24rem;
     --container-md: 28rem;
+    --container-xl: 36rem;
     --container-2xl: 42rem;
     --container-7xl: 80rem;
     --text-xs: 0.75rem;
@@ -1777,6 +1778,9 @@
   .max-w-sm {
     max-width: var(--container-sm);
   }
+  .max-w-xl {
+    max-width: var(--container-xl);
+  }
   .link {
     @layer daisyui.l1.l2.l3 {
       cursor: pointer;
@@ -1827,6 +1831,13 @@
       --tw-space-y-reverse: 0;
       margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
       margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-3 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 3) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 3) * calc(1 - var(--tw-space-y-reverse)));
     }
   }
   .space-x-1 {
@@ -2005,6 +2016,9 @@
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
   }
+  .whitespace-nowrap {
+    white-space: nowrap;
+  }
   .whitespace-pre-line {
     white-space: pre-line;
   }
@@ -2150,6 +2164,12 @@
     @layer daisyui.l1.l2 {
       --badge-color: var(--color-success);
       --badge-fg: var(--color-success-content);
+    }
+  }
+  .badge-warning {
+    @layer daisyui.l1.l2 {
+      --badge-color: var(--color-warning);
+      --badge-fg: var(--color-warning-content);
     }
   }
   .btn-error {
