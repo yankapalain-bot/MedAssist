@@ -48,8 +48,8 @@ urlpatterns = [
     # # Patient - PregnancyProfile Views
     # ---------------------------------------------------------------------------------------------------------------------
     
-    path("pregnant/new/",           views.PregnancyProfileCreateView.as_view(),   name="pregnantprofile_create"),
-    path("pregnant/<int:pk>/edit/", views.PregnancyProfileUpdateView.as_view(),   name="pregnantprofile_update"),
+    path("pregnant/new/",           views.PregnancyProfileCreateView.as_view(),   name="pregnancy_create"),
+    path("pregnant/<int:pk>/edit/", views.PregnancyProfileUpdateView.as_view(),   name="pregnancy_update"),
 
     # ---------------------------------------------------------------------------------------------------------------------
     # # Clinical - ConsultationNote Views
@@ -81,11 +81,6 @@ urlpatterns = [
     path("users/<int:pk>/",            views.UserDetailView.as_view(), name="user_detail"),
     path("users/<int:pk>/edit/",       views.UserUpdateView.as_view(), name="user_update"),
     path("users/<int:pk>/delete/",     views.UserDeleteView.as_view(), name="user_delete"),
-
-  
-
-
-
 
     
 ]

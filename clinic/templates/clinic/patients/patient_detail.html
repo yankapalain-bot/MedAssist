@@ -59,101 +59,115 @@
       <a href="{% url 'clinic:pregnancy_create' %}?patient={{ patient.pk }}" class="btn btn-xs btn-outline mt-2">Add pregnancy profile</a>
       {% endif %}
 
-      <!-- Medical History-->
+    
+
+      
+      <!-- Medical History -->
       <div class="divider"></div>
       {% if medical_history %}
         <h3 class="font-semibold text-sm mb-2">Medical History</h3>
-        <dl class="space-y-1 text-sm">
-        <div>
-            <dt class="font-medium opacity-60">Blood Group</dt>
-            <dd>
-            <span class="badge badge-outline badge-sm">{{ medical_history.blood_group }}</span>
-            </dd>
-        </div>    
 
-        {% with flags=medical_history %}
-        <div>
-            <dt class="font-medium opacity-60 mb-1">Chronic Conditions</dt>
-            <dd class="flex flex-wrap gap-1">
-            {% if flags.hypertension %}
-                <span class="badge badge-warning badge-sm">HTA</span>
-            {% endif %}
-            {% if flags.diabetes %}
-                <span class="badge badge-warning badge-sm">Diabetes</span>
-            {% endif %}
-            {% if flags.sickle_cell_disease %}
-                <span class="badge badge-error badge-sm">Sickle Cell Disease</span>
-            {% endif %}
-            {% if flags.hiv_positive %}
-                <span class="badge badge-error badge-sm">VIH+</span>
-            {% endif %}
-            {% if flags.tuberculosis %}
-                <span class="badge badge-error badge-sm">Tuberculosis</span>
-            {% endif %}
-            {% if flags.hepatitis_b %}
-                <span class="badge badge-warning badge-sm">Hepatitis B</span>
-            {% endif %}
-            {% if flags.epilepsy %}
-                <span class="badge badge-info badge-sm">Epilepsy</span>
-            {% endif %}
-            {% if flags.asthma %}
-                <span class="badge badge-info badge-sm">Asthma</span>
-            {% endif %}
-            {% if not flags.hypertension and not flags.diabetes and not flags.sickle_cell_disease
-                    and not flags.hiv_positive and not flags.tuberculosis and not flags.hepatitis_b
-                    and not flags.epilepsy and not flags.asthma %}
-                <span class="opacity-50 text-xs">No chronic conditions reported</span>
-            {% endif %}
-            </dd>
-        </div>
-        {% endwith %}
+         <dl class="space-y-1 text-sm">
+            <div>
+                <dt class="font-medium opacity-60">Blood Group</dt>
+                <dd>
+                    <span class="badge badge-outline badge-sm">{{ medical_history.blood_group }}</span>
+                </dd>
+            </div>
 
-        {% if medical_history.allergies %}
-        <div>
-            <dt class="font-medium opacity-60">Allergies</dt>
-            <dd>{{ medical_history.allergies }}</dd>
-        </div>
-        {% endif %}
+            {% with flags=medical_history %}
+                <div>
+                    <dt class="font-medium opacity-60 mb-1">Chronic Conditions</dt>
+                    <dd class="flex flex-wrap gap-1">
+                        {% if flags.hypertension %}
+                            <span class="badge badge-warning badge-sm">High Blood Pressure</span>
+                        {% endif %}
 
-        {% if medical_history.current_medications %}
-        <div>
-            <dt class="font-medium opacity-60">Current Medications</dt>
-            <dd>{{ medical_history.current_medications }}</dd>
-        </div>
-        {% endif %}
+                        {% if flags.diabetes %}
+                            <span class="badge badge-warning badge-sm">Diabetes</span>
+                        {% endif %}
 
-        {% if medical_history.previous_surgeries %}
-        <div>
-            <dt class="font-medium opacity-60">Surgeries</dt>
-            <dd>{{ medical_history.previous_surgeries }}</dd>
-        </div>
-        {% endif %}
+                        {% if flags.sickle_cell_disease %}
+                            <span class="badge badge-error badge-sm">Sickle Cell Disease</span>
+                        {% endif %}
 
-        <div class="flex gap-2 mt-1">
-            {% if medical_history.smoking %}
-            <span class="badge badge-ghost badge-sm">🚬 Somoking</span>
+                        {% if flags.hiv_positive %}
+                            <span class="badge badge-error badge-sm">HIV_Positive</span>
+                        {% endif %}
+
+                        {% if flags.tuberculosis %}
+                            <span class="badge badge-error badge-sm">Tuberculosis</span>
+                        {% endif %}
+
+                        {% if flags.hepatitis_b %}
+                            <span class="badge badge-warning badge-sm">Hepatitis B</span>
+                        {% endif %}
+
+                        {% if flags.epilepsy %}
+                            <span class="badge badge-info badge-sm">Epilepsy</span>
+                        {% endif %}
+
+                        {% if flags.asthma %}
+                            <span class="badge badge-info badge-sm">Asthma</span>
+                        {% endif %}
+
+                        {% if no_chronic_condition %}
+                            <span class="opacity-50 text-xs">no_chronic_condition</span>
+                        {% endif %}
+                    </dd>
+                </div>
+            {% endwith %}
+
+            {% if medical_history.allergies %}
+            <div>
+                <dt class="font-medium opacity-60">Allergies</dt>
+                <dd>{{ medical_history.allergies }}</dd>
+            </div>
             {% endif %}
-            {% if medical_history.alcohol %}
-            <span class="badge badge-ghost badge-sm">🍺 Alcohol</span>
+
+            {% if medical_history.current_medications %}
+            <div>
+                <dt class="font-medium opacity-60">Current Medications</dt>
+                <dd>{{ medical_history.current_medications }}</dd>
+            </div>
             {% endif %}
-        </div>
+
+            {% if medical_history.previous_surgeries %}
+            <div>
+                <dt class="font-medium opacity-60">Chirurgies</dt>
+                <dd>{{ medical_history.previous_surgeries }}</dd>
+            </div>
+            {% endif %}
+
+            <div class="flex gap-2 mt-1">
+                {% if medical_history.smoking %}
+                    <span class="badge badge-ghost badge-sm">🚬 Tabac</span>
+                {% endif %}
+                {% if medical_history.alcohol %}
+                    <span class="badge badge-ghost badge-sm">🍺 Alcool</span>
+                {% endif %}
+            </div>
         </dl>
-        <a href="{% url 'clinic:medicalhistory_update' medical_history.pk %}"
-            class="btn btn-xs btn-outline mt-2">
-            Edit History
+       
+
+
+        <a href="{% url 'clinic:medicalhistory_update' medical_history.pk %}" class="btn btn-xs btn-outline mt-2">
+            Update History
         </a>
 
-    {% else %}
-        <p class="text-sm opacity-60">No medical history recorded.</p>
-        <a href="{% url 'clinic:medicalhistory_create' %}?patient={{ patient.pk }}"
-        class="btn btn-xs btn-outline mt-2">
-        Add History
+      {% else %}
+        <p class="text-sm opacity-60">Aucun antécédent médical enregistré.</p>
+        <a href="{% url 'clinic:medicalhistory_create' %}?patient={{ patient.pk }}" class="btn btn-xs btn-outline mt-2">
+            New History
         </a>
-    {% endif %}     
+      {% endif %}
+
+
+
 
     </div>
   </div>
-  
+
 
   <!-- Right column: consultations, appointments, reminders -->
   <div class="lg:col-span-2 space-y-6">

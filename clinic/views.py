@@ -77,10 +77,23 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
         except PregnancyProfile.DoesNotExist:
             context["pregnancy_profile"] = None
         
-        try:
-            context["medical_history"] = patient.medical_history
+        try:            
+            medical_history = patient.medical_history
+            context["medical_history"] = medical_history
+
+            context["no_chronic_condition"] = not any([
+                medical_history.hypertension,
+                medical_history.diabetes,
+                medical_history.sickle_cell_disease,
+                medical_history.hiv_positive,
+                medical_history.tuberculosis,
+                medical_history.hepatitis_b,
+                medical_history.epilepsy,
+                medical_history.asthma,
+            ])
         except MedicalHistory.DoesNotExist:
             context["medical_history"] = None
+            context["no_chronic_condition"] = True
 
         return context
 
